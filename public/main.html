@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Главная страница</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* Дополнительные стили для главной страницы */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(120deg,#84fab0,#8fd3f4);
+  font-family: Arial, sans-serif;
+  flex-direction: column;
+  color: #333;
+  text-align: center;
+}
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  animation: fadeInDown 1s ease forwards;
+}
+p {
+  font-size: 1.2em;
+  animation: fadeInUp 1s ease forwards;
+}
+@keyframes fadeInDown {
+  0% {opacity:0; transform: translateY(-50px);}
+  100% {opacity:1; transform: translateY(0);}
+}
+@keyframes fadeInUp {
+  0% {opacity:0; transform: translateY(50px);}
+  100% {opacity:1; transform: translateY(0);}
+}
+button {
+  padding: 12px 25px;
+  font-size: 1em;
+  border-radius: 8px;
+  border: none;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  margin-top: 25px;
+  transition: all 0.3s;
+}
+button:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+</style>
+</head>
+<body>
+<h1 id="welcome"></h1>
+<p>Вы успешно авторизовались на сайте.</p>
+<button onclick="logout()">Выйти</button>
+
+<script>
+// Функция для правильного склонения "год/года/лет"
+function getYearWord(age) {
+  if (!age) return '';
+  const lastDigit = age % 10;
+  const lastTwoDigits = age % 100;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) return 'лет';
+  if (lastDigit === 1) return 'год';
+  if (lastDigit >= 2 && lastDigit <= 4) return 'года';
+  return 'лет';
+}
+
+// Функция выхода
+function logout() {
+  localStorage.removeItem('user'); // удаляем данные пользователя
+  window.location.href = "index.html"; // возвращаем на страницу входа
+}
+
+// Динамическое приветствие
+const user = JSON.parse(localStorage.getItem('user'));
+const welcome = document.getElementById('welcome');
+
+if(user){
+  const yearWord = getYearWord(user.age);
+  welcome.textContent = `Добро пожаловать ${user.first_name} ${user.last_name}, мы знаем что тебе ${user.age} ${yearWord}`;
+} else {
+  welcome.textContent = 'Добро пожаловать!';
+}
+</script>
+</body>
+</html>

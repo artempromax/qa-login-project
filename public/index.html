@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Вход и регистрация</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+  <h2>Вход и регистрация</h2>
+
+  <div class="tabs">
+    <button id="tab-login" class="active">Вход</button>
+    <button id="tab-register">Регистрация</button>
+  </div>
+
+  <!-- Форма входа -->
+  <form id="loginForm">
+    <input type="text" id="login-username" placeholder="Логин" required>
+    <div class="password-wrapper">
+      <input type="password" id="login-password" placeholder="Пароль" required>
+      <span class="toggle-password" onclick="togglePassword('login-password')">👁️</span>
+    </div>
+    <button type="submit">Войти</button>
+  </form>
+
+  <!-- Форма регистрации -->
+  <form id="registerForm" style="display:none;">
+    <input type="text" id="first_name" placeholder="Имя" required>
+    <input type="text" id="last_name" placeholder="Фамилия" required>
+    <input type="email" id="email" placeholder="Почта" required>
+    <input type="number" id="age" placeholder="Возраст" required>
+    <input type="text" id="reg-username" placeholder="Логин" required>
+    <div class="password-wrapper">
+      <input type="password" id="reg-password" placeholder="Пароль" required>
+      <span class="toggle-password" onclick="togglePassword('reg-password')">👁️</span>
+    </div>
+    <button type="submit">Зарегистрироваться</button>
+  </form>
+
+  <div id="notification"></div>
+</div>
+
+<script>
+// Элементы
+const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
+const tabLogin = document.getElementById('tab-login');
+const tabRegister = document.getElementById('tab-register');
+const notification = document.getElementById('notification');
+
+// Вкладки
+tabLogin.onclick = () => {
+  loginForm.style.display = 'block';
+  registerForm.style.display = 'none';
+  tabLogin.classList.add('active');
+  tabRegister.classList.remove('active');
+  hideNotification();
+};
+
+tabRegister.onclick = () => {
+  loginForm.style.display = 'none';
+  registerForm.style.display = 'block';
+  tabRegister.classList.add('active');
+  tabLogin.classList.remove('active');
+  hideNotification();
+};
+
+// Глазик для пароля
+function togglePassword(id) {
+  const input = document.getElementById(id);
+  input.type = input.type === "password" ? "text" : "password";
+}
+
+// Уведомления
+function showNotification(message, type='success') {
+  notification.textContent = message;
+  notification.className = type;
+  notification.style.display = 'block';
+  notification.style.opacity = 0;
+  setTimeout(() => notification.style.opacity = 1, 50);
+  setTimeout(() => notification.style.opacity = 0, 3500);
+}
+
+function hideNotification() {
+  notification.style.opacity = 0;
+  setTimeout(() => notification.style.display = 'none', 400);
+}
+
+// Вход
+loginForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+
+  try {
+    const res = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+
+    if(res.status === 200){
+      localStorage.setItem('user', JSON.stringify(data.user));
+      window.location.href = "main.html";
+    } else {
+      showNotification('Неверный логин или пароль', 'error');
+    }
+  } catch(err){
+    showNotification('Ошибка сервера', 'error');
+  }
+});
+
+// Регистрация
+registerForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const first_name = document.getElementById('first_name').value.trim();
+  const last_name = document.getElementById('last_name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const age = document.getElementById('age').value.trim();
+  const username = document.getElementById('reg-username').value.trim();
+  const password = document.getElementById('reg-password').value.trim();
+
+  try {
+    const res = await fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ first_name, last_name, email, age, username, password })
+    });
+    const data = await res.json();
+    if(res.status === 200){
+      showNotification('Регистрация прошла успешно!', 'success');
+      registerForm.reset();
+      tabLogin.click();
+    } else {
+      showNotification(data.error || 'Ошибка регистрации', 'error');
+    }
+  } catch(err){
+    showNotification('Ошибка сервера', 'error');
+  }
+});
+</script>
+</body>
+</html>

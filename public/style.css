@@ -1,0 +1,172 @@
+/* Общие стили для всего сайта */
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #84fab0, #8fd3f4);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #333;
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  width: 350px;
+  text-align: center;
+  animation: fadeInScale 0.8s ease forwards;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 1em;
+  transition: all 0.3s;
+}
+
+input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0,123,255,0.5);
+}
+
+/* Кнопки */
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Вкладки */
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  flex: 1;
+  margin: 0 5px;
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.tabs button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Глазик для пароля */
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.1em;
+}
+
+/* Уведомления */
+#notification {
+  display: none;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+#notification.success {
+  background-color: #28a745;
+}
+
+#notification.error {
+  background-color: #dc3545;
+}
+
+/* Анимации */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* main.html дополнительно */
+body.main-page {
+  flex-direction: column;
+}
+
+.main-container {
+  background: rgba(255,255,255,0.95);
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  text-align: center;
+  animation: fadeInScale 0.8s ease forwards;
+}
+
+h1, p {
+  margin: 10px 0;
+}
+
+@keyframes fadeInDown {
+  0% {opacity:0; transform: translateY(-50px);}
+  100% {opacity:1; transform: translateY(0);}
+}
+
+@keyframes fadeInUp {
+  0% {opacity:0; transform: translateY(50px);}
+  100% {opacity:1; transform: translateY(0);}
+}
+
+h1 {
+  font-size: 2.5em;
+  animation: fadeInDown 1s ease forwards;
+}
+
+p {
+  font-size: 1.2em;
+  animation: fadeInUp 1s ease forwards;
+}
+
+.main-container button {
+  margin-top: 25px;
+}
