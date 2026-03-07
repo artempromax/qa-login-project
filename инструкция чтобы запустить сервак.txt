@@ -1,0 +1,15 @@
+
+
+
+
+
+cd qa-login-project
+
+
+
+
+npm start
+
+
+
+чтобы закрыть просто CTRL + с
