@@ -2,89 +2,158 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Главная страница</title>
+<title>Фильмотека</title>
 <link rel="stylesheet" href="style.css">
-<style>
-/* Дополнительные стили для главной страницы */
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(120deg,#84fab0,#8fd3f4);
-  font-family: Arial, sans-serif;
-  flex-direction: column;
-  color: #333;
-  text-align: center;
-}
-h1 {
-  font-size: 2.5em;
-  margin-bottom: 20px;
-  animation: fadeInDown 1s ease forwards;
-}
-p {
-  font-size: 1.2em;
-  animation: fadeInUp 1s ease forwards;
-}
-@keyframes fadeInDown {
-  0% {opacity:0; transform: translateY(-50px);}
-  100% {opacity:1; transform: translateY(0);}
-}
-@keyframes fadeInUp {
-  0% {opacity:0; transform: translateY(50px);}
-  100% {opacity:1; transform: translateY(0);}
-}
-button {
-  padding: 12px 25px;
-  font-size: 1em;
-  border-radius: 8px;
-  border: none;
-  background: #007bff;
-  color: white;
-  cursor: pointer;
-  margin-top: 25px;
-  transition: all 0.3s;
-}
-button:hover {
-  background: #0056b3;
-  transform: scale(1.05);
-}
-</style>
 </head>
-<body>
-<h1 id="welcome"></h1>
-<p>Вы успешно авторизовались на сайте.</p>
-<button onclick="logout()">Выйти</button>
+<body class="main-page">
+
+<!-- 🔥 HEADER -->
+<header class="header">
+  <h2>🎬 Фильмотека</h2>
+
+  <div class="user-menu" onclick="toggleUserMenu()">
+    <div class="user-avatar">👤</div>
+    <div id="user-dropdown" class="dropdown">
+      <p id="user-info"></p>
+      <button onclick="logout()">Выйти</button>
+    </div>
+  </div>
+</header>
+
+<input type="text" id="search" placeholder="🔍 Поиск фильма...">
+
+<h2>🎬 Фильмы</h2>
+<div id="movies" class="movies-container"></div>
+
+<h2>❤️ Избранное</h2>
+<div id="favorites" class="movies-container"></div>
+
+<!-- 🔥 МОДАЛКА -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span onclick="closeModal()" class="close">✖</span>
+    <img id="modal-img">
+    <h2 id="modal-title"></h2>
+    <p id="modal-info"></p>
+    <a id="modal-link" target="_blank" class="modal-btn">Перейти на фильм</a>
+  </div>
+</div>
 
 <script>
-// Функция для правильного склонения "год/года/лет"
-function getYearWord(age) {
-  if (!age) return '';
-  const lastDigit = age % 10;
-  const lastTwoDigits = age % 100;
-
-  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) return 'лет';
-  if (lastDigit === 1) return 'год';
-  if (lastDigit >= 2 && lastDigit <= 4) return 'года';
-  return 'лет';
-}
-
-// Функция выхода
 function logout() {
-  localStorage.removeItem('user'); // удаляем данные пользователя
-  window.location.href = "index.html"; // возвращаем на страницу входа
+  localStorage.removeItem('user');
+  window.location.href = "index.html";
 }
 
-// Динамическое приветствие
+// 👤 пользователь
 const user = JSON.parse(localStorage.getItem('user'));
-const welcome = document.getElementById('welcome');
-
 if(user){
-  const yearWord = getYearWord(user.age);
-  welcome.textContent = `Добро пожаловать ${user.first_name} ${user.last_name}, мы знаем что тебе ${user.age} ${yearWord}`;
-} else {
-  welcome.textContent = 'Добро пожаловать!';
+  document.getElementById('user-info').innerHTML =
+    `${user.first_name} ${user.last_name}<br>${user.email}<br>${user.age} лет`;
 }
+
+// dropdown
+function toggleUserMenu(){
+  const menu = document.getElementById('user-dropdown');
+  menu.classList.toggle('active');
+}
+
+// закрытие при клике вне
+window.addEventListener('click', (e) => {
+  const menu = document.getElementById('user-dropdown');
+  const btn = document.querySelector('.user-menu');
+
+  if (!btn.contains(e.target)) {
+    menu.classList.remove('active');
+  }
+});
+
+// ❤️ избранное
+let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+function toggleFavorite(movie) {
+  const exists = favorites.find(m => m.title === movie.title);
+
+  if (exists) {
+    favorites = favorites.filter(m => m.title !== movie.title);
+  } else {
+    favorites.push(movie);
+  }
+
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+  renderFavorites();
+  renderMovies(allMovies);
+}
+
+// 🎬 модалка
+function openModal(movie){
+  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('modal-img').src = movie.poster;
+  document.getElementById('modal-title').textContent = movie.title;
+  document.getElementById('modal-info').textContent =
+    `Год: ${movie.year} | Рейтинг: ${movie.rating}`;
+  document.getElementById('modal-link').href = movie.link;
+}
+
+function closeModal(){
+  document.getElementById('modal').style.display = 'none';
+}
+
+// 🎬 карточка
+function createCard(movie) {
+  const isFav = favorites.find(m => m.title === movie.title);
+
+  const card = document.createElement('div');
+  card.className = 'movie-card';
+
+  card.innerHTML = `
+    <img src="${movie.poster}">
+    <div class="title">${movie.title}</div>
+
+    <div class="overlay">
+      <p>⭐ ${movie.rating}</p>
+      <button onclick='openModal(${JSON.stringify(movie)})'>Подробнее</button>
+      <button onclick='toggleFavorite(${JSON.stringify(movie)})'>
+        ${isFav ? "💔" : "❤️"}
+      </button>
+    </div>
+  `;
+
+  return card;
+}
+
+// загрузка
+let allMovies = [];
+
+fetch('/api/movies')
+  .then(res => res.json())
+  .then(data => {
+    allMovies = data;
+    renderMovies(data);
+    renderFavorites();
+  });
+
+function renderMovies(movies) {
+  const container = document.getElementById('movies');
+  container.innerHTML = '';
+  movies.forEach(m => container.appendChild(createCard(m)));
+}
+
+function renderFavorites() {
+  const container = document.getElementById('favorites');
+  container.innerHTML = '';
+  favorites.forEach(m => container.appendChild(createCard(m)));
+}
+
+// поиск
+document.getElementById('search').addEventListener('input', e => {
+  const value = e.target.value.toLowerCase();
+  const filtered = allMovies.filter(m =>
+    m.title.toLowerCase().includes(value)
+  );
+  renderMovies(filtered);
+});
 </script>
+
 </body>
 </html>
