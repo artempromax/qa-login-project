@@ -1,4 +1,7 @@
-/* Общие стили для всего сайта */
+/* =======================
+   ОБЩИЕ СТИЛИ
+======================= */
+
 body {
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #84fab0, #8fd3f4);
@@ -11,19 +14,52 @@ body {
   color: #333;
 }
 
-.container {
+/* MAIN PAGE BODY */
+body.main-page {
+  background: #111;
+  color: white;
+  padding-top: 80px;
+  flex-direction: column;
+}
+
+/* =======================
+   КОНТЕЙНЕРЫ
+======================= */
+
+.container,
+.main-container {
   background: rgba(255, 255, 255, 0.95);
   padding: 30px 40px;
   border-radius: 15px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  width: 350px;
   text-align: center;
   animation: fadeInScale 0.8s ease forwards;
+  width: 350px;
+}
+
+/* =======================
+   ТЕКСТ
+======================= */
+
+h1 {
+  font-size: 2.5em;
+  animation: fadeInDown 1s ease forwards;
+  margin: 10px 0;
 }
 
 h2 {
   margin-bottom: 20px;
 }
+
+p {
+  font-size: 1.2em;
+  animation: fadeInUp 1s ease forwards;
+  margin: 10px 0;
+}
+
+/* =======================
+   INPUTS
+======================= */
 
 input[type="text"],
 input[type="password"],
@@ -45,7 +81,10 @@ input:focus {
   box-shadow: 0 0 5px rgba(0,123,255,0.5);
 }
 
-/* Кнопки */
+/* =======================
+   КНОПКИ
+======================= */
+
 button {
   width: 100%;
   padding: 12px;
@@ -64,7 +103,10 @@ button:hover {
   transform: scale(1.05);
 }
 
-/* Вкладки */
+/* =======================
+   TABS
+======================= */
+
 .tabs {
   display: flex;
   justify-content: space-around;
@@ -83,7 +125,10 @@ button:hover {
   color: white;
 }
 
-/* Глазик для пароля */
+/* =======================
+   PASSWORD
+======================= */
+
 .password-wrapper {
   position: relative;
 }
@@ -97,7 +142,10 @@ button:hover {
   font-size: 1.1em;
 }
 
-/* Уведомления */
+/* =======================
+   NOTIFICATION
+======================= */
+
 #notification {
   display: none;
   margin-top: 15px;
@@ -117,56 +165,220 @@ button:hover {
   background-color: #dc3545;
 }
 
-/* Анимации */
-@keyframes fadeInScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+/* =======================
+   HEADER
+======================= */
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: black;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  z-index: 1000;
 }
 
-/* main.html дополнительно */
-body.main-page {
-  flex-direction: column;
+/* =======================
+   USER MENU
+======================= */
+
+.user-menu {
+  cursor: pointer;
+  position: relative;
+  font-size: 20px;
 }
 
-.main-container {
-  background: rgba(255,255,255,0.95);
-  padding: 30px 40px;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+.dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 30px;
+  background: #222;
+  padding: 15px;
+  border-radius: 10px;
+  width: 200px;
+}
+
+.dropdown button {
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* =======================
+   MOVIES
+======================= */
+
+.movies-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.movie-card {
+  position: relative;
+  width: 200px;
+  cursor: pointer;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+.movie-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.movie-card h3 {
+  margin-bottom: 10px;
+}
+
+.title {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.7);
+  padding: 5px;
   text-align: center;
-  animation: fadeInScale 0.8s ease forwards;
+  border-radius: 0 0 10px 10px;
 }
 
-h1, p {
-  margin: 10px 0;
+/* OVERLAY */
+.overlay {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  opacity: 0;
+  transition: 0.3s;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.movie-card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay button {
+  margin: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+/* =======================
+   SEARCH
+======================= */
+
+#search {
+  padding: 10px;
+  width: 300px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin: 20px;
+}
+
+/* =======================
+   LOGOUT
+======================= */
+
+.logout-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: auto;
+  padding: 10px 15px;
+  background: #ff4757;
+  border-radius: 8px;
+  z-index: 1000;
+}
+
+.logout-btn:hover {
+  background: #e84118;
+}
+
+/* =======================
+   MODAL
+======================= */
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #222;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+}
+
+.modal img {
+  width: 250px;
+  border-radius: 10px;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* MODAL BUTTON */
+.modal-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #ff4757;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.modal-btn:hover {
+  background: #e84118;
+}
+
+/* =======================
+   ANIMATIONS
+======================= */
+
+@keyframes fadeInScale {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes fadeInDown {
-  0% {opacity:0; transform: translateY(-50px);}
-  100% {opacity:1; transform: translateY(0);}
+  0% { opacity: 0; transform: translateY(-50px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInUp {
-  0% {opacity:0; transform: translateY(50px);}
-  100% {opacity:1; transform: translateY(0);}
-}
-
-h1 {
-  font-size: 2.5em;
-  animation: fadeInDown 1s ease forwards;
-}
-
-p {
-  font-size: 1.2em;
-  animation: fadeInUp 1s ease forwards;
-}
-
-.main-container button {
-  margin-top: 25px;
+  0% { opacity: 0; transform: translateY(50px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
