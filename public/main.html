@@ -11,8 +11,17 @@
 <header class="header">
   <h2>🎬 Фильмотека</h2>
 
-  <div class="user-menu" onclick="toggleUserMenu()">
-    <div class="user-avatar">👤</div>
+  <div class="user-menu">
+  <div class="user-avatar" id="avatarBtn">👤</div>
+
+  <div id="user-dropdown" class="dropdown">
+    <h3>Профиль</h3>
+
+    <p id="user-info"></p>
+
+    <button onclick="logout()">Выйти</button>
+  </div>
+</div>
     <div id="user-dropdown" class="dropdown">
       <p id="user-info"></p>
       <button onclick="logout()">Выйти</button>
@@ -24,18 +33,32 @@
 
 <h2>🎬 Фильмы</h2>
 <div id="movies" class="movies-container"></div>
-
 <h2>❤️ Избранное</h2>
 <div id="favorites" class="movies-container"></div>
 
 <!-- 🔥 МОДАЛКА -->
-<div id="modal" class="modal">
-  <div class="modal-content">
+<div id="modal" class="modal" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
     <span onclick="closeModal()" class="close">✖</span>
     <img id="modal-img">
     <h2 id="modal-title"></h2>
     <p id="modal-info"></p>
-    <a id="modal-link" target="_blank" class="modal-btn">Перейти на фильм</a>
+    <br>
+    <div class="modal-actions">
+
+  <a id="modal-link"
+     target="_blank"
+     class="watch-btn"
+     onclick="event.stopPropagation()">
+     🎬 Смотреть
+  </a>
+
+  <a id="modal-trailer"
+     target="_blank"
+     class="trailer-btn"
+     onclick="event.stopPropagation()">
+     ▶ Трейлер
+  </a>
   </div>
 </div>
 
@@ -48,15 +71,27 @@ function logout() {
 // 👤 пользователь
 const user = JSON.parse(localStorage.getItem('user'));
 if(user){
-  document.getElementById('user-info').innerHTML =
+  document.getElementById('user-info').innerHTML = `
+<b>👤 ${user.first_name} ${user.last_name}</b><br><br>
+📛 Логин: ${user.username}<br>
+${user.email ? `📧 Почта: ${user.email}<br>` : `Почта: —<br>`}
+🎂 Возраст: ${user.age}
+`;
     `${user.first_name} ${user.last_name}<br>${user.email}<br>${user.age} лет`;
 }
 
 // dropdown
-function toggleUserMenu(){
-  const menu = document.getElementById('user-dropdown');
-  menu.classList.toggle('active');
-}
+const avatarBtn = document.getElementById('avatarBtn');
+const dropdown = document.getElementById('user-dropdown');
+
+avatarBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  dropdown.classList.toggle('active');
+});
+
+window.addEventListener('click', () => {
+  dropdown.classList.remove('active');
+});
 
 // закрытие при клике вне
 window.addEventListener('click', (e) => {
@@ -93,6 +128,9 @@ function openModal(movie){
   document.getElementById('modal-info').textContent =
     `Год: ${movie.year} | Рейтинг: ${movie.rating}`;
   document.getElementById('modal-link').href = movie.link;
+  document.getElementById('modal-link').innerHTML = "🎥 Смотреть";
+  document.getElementById('modal-trailer').href =
+  `https://www.youtube.com/results?search_query=${movie.title}+official+trailer`;
 }
 
 function closeModal(){
@@ -113,7 +151,7 @@ function createCard(movie) {
     <div class="overlay">
       <p>⭐ ${movie.rating}</p>
       <button onclick='openModal(${JSON.stringify(movie)})'>Подробнее</button>
-      <button onclick='toggleFavorite(${JSON.stringify(movie)})'>
+      <button onclick='event.stopPropagation(); toggleFavorite(${JSON.stringify(movie)})'>
         ${isFav ? "💔" : "❤️"}
       </button>
     </div>
